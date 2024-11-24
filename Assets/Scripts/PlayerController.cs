@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         // Pega a entrada do jogador, e cria um Vector2 para usar no playerDirection
         playerDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
+        
         // Se o player vai para a ESQUERDA e está olhando para a DIREITA
         if (playerDirection.x < 0 && playerFacingRight)
         {
