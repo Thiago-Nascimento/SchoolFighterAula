@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +15,14 @@ public class PlayerController : MonoBehaviour
 
     // Player olhando para a direita
     private bool playerFacingRight = true;
+
+    //Variuavel contadora 
+    private int punchCount;
+
+    //Tempo de ataque 
+    private float timeCross = 1.3f;
+
+    private bool comboControl; 
     
     void Start()
     {
@@ -27,6 +37,42 @@ public class PlayerController : MonoBehaviour
     {
         PlayerMove();
         UpdateAnimator();
+
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (isWalking == false)
+            {
+           
+                //Iniciar o temporizador
+
+
+                if (punchCount < 2)
+                {
+
+                    PlayerJab();
+                    punchCount++;
+
+                    if (!comboControl)
+                    {
+                        StartCoroutine(CrossController());
+                    }
+                    
+                }
+
+                else if (punchCount >= 2)
+                {
+                    
+                    PlayerCross();
+                    punchCount = 0;
+                }
+
+                //Parando o temporizador 
+                StopCoroutine(CrossController());
+            }
+        }
+
+        
     }
 
     // Fixed Update geralmente é utilizada para implementação de física no jogo
@@ -80,5 +126,29 @@ public class PlayerController : MonoBehaviour
         // Girar o sprite do player em 180º no eixo Y
         // X, Y, Z
         transform.Rotate(0, 180, 0);
+    }
+
+
+    void PlayerJab()
+    {
+        //Acessa a animação do JAb
+        //Ativa o gatilho de ataque Jab
+        playerAnimator.SetTrigger("isJab");
+    }
+
+    void PlayerCross()
+    {
+        playerAnimator.SetTrigger("isCross");
+    }
+
+
+    IEnumerator CrossController()
+    {
+        comboControl = true;
+
+        yield return new WaitForSeconds(timeCross);
+        punchCount = 0;
+
+        comboControl = false;
     }
 }
