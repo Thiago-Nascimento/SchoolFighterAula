@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRigidBody;
-    public float playerSpeed = 1f;
+    
+    public float playerSpeed = 0.6f;
+    public float currentSpeed;
 
     public Vector2 playerDirection;
 
@@ -22,7 +24,12 @@ public class PlayerController : MonoBehaviour
     //Tempo de ataque 
     private float timeCross = 1.3f;
 
-    private bool comboControl; 
+    private bool comboControl;
+
+    // Indicar se o Player esta morto
+    private bool isDead;
+
+
     
     void Start()
     {
@@ -31,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
         // Obtem e inicializa as propriedades do animator
         playerAnimator = GetComponent<Animator>();
+
+        currentSpeed = playerSpeed;
     }
 
     private void Update()
@@ -38,41 +47,34 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
         UpdateAnimator();
 
-
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (isWalking == false)
-            {
+            
            
-                //Iniciar o temporizador
+            //Iniciar o temporizador
+            if (punchCount < 2)
+            {
 
+                PlayerJab();
+                punchCount++;
 
-                if (punchCount < 2)
+                if (!comboControl)
                 {
-
-                    PlayerJab();
-                    punchCount++;
-
-                    if (!comboControl)
-                    {
-                        StartCoroutine(CrossController());
-                    }
-                    
+                    StartCoroutine(CrossController());
                 }
-
-                else if (punchCount >= 2)
-                {
                     
-                    PlayerCross();
-                    punchCount = 0;
-                }
-
-                //Parando o temporizador 
-                StopCoroutine(CrossController());
             }
-        }
 
-        
+            else if (punchCount >= 2)
+            {
+                    
+                PlayerCross();
+                punchCount = 0;
+            }
+
+            //Parando o temporizador 
+            StopCoroutine(CrossController());            
+        }        
     }
 
     // Fixed Update geralmente é utilizada para implementação de física no jogo
@@ -89,7 +91,8 @@ public class PlayerController : MonoBehaviour
             isWalking = false;
         }
 
-        playerRigidBody.MovePosition(playerRigidBody.position + playerSpeed * Time.fixedDeltaTime * playerDirection);
+        // playerRigidBody.MovePosition(playerRigidBody.position + playerSpeed * Time.fixedDeltaTime * playerDirection);
+        playerRigidBody.MovePosition(playerRigidBody.position + currentSpeed * Time.fixedDeltaTime * playerDirection);
     }
 
     void PlayerMove()
@@ -140,8 +143,6 @@ public class PlayerController : MonoBehaviour
     {
         playerAnimator.SetTrigger("isCross");
     }
-
-
     IEnumerator CrossController()
     {
         comboControl = true;
@@ -150,5 +151,15 @@ public class PlayerController : MonoBehaviour
         punchCount = 0;
 
         comboControl = false;
+    }
+
+    void ZeroSpeed()
+    {
+        currentSpeed = 0;
+    }
+
+    void ResetSpeed()
+    {
+        currentSpeed = playerSpeed;
     }
 }
