@@ -24,6 +24,10 @@ public class EnemyMeleeController : MonoBehaviour
 
     private float horizontalForce;
     private float verticalForce;
+
+    // Variavel que vamos usar para controlar o intervalo de tempo que o inimigo ficará andando vertical
+    // Isso vai ajudar à dar uma aleatoriedade ao movimento do inimigo
+    private float walkTimer;
     
     void Start()
     {
@@ -67,6 +71,9 @@ public class EnemyMeleeController : MonoBehaviour
             previousDirectionRight = false;
         }
 
+        // Iniciar o timer do caminhar do inimigo
+        walkTimer += Time.deltaTime;
+
         // Gerenciar a animação do inimigo
         if (horizontalForce == 0 && verticalForce == 0)
         {
@@ -93,6 +100,15 @@ public class EnemyMeleeController : MonoBehaviour
         // -5 / 5    =   -1
         horizontalForce = targetDistance.x / Mathf.Abs(targetDistance.x);
 
+        // Entre 1 e 2 segundos, será feita uma definição de direção vertical
+        if (walkTimer >= Random.Range(1f, 2f))
+        {
+            verticalForce = Random.Range(-1, 2);
+
+            // Zera o timer de movimentação para andar verticalmente novamente daqui a +- 1 seg
+            walkTimer = 0;
+        }
+
         // Caso esteja perto do Player, parar a movimentação
         if (Mathf.Abs(targetDistance.x) < 0.2f)
         {
@@ -100,7 +116,7 @@ public class EnemyMeleeController : MonoBehaviour
         }
 
         // Aplica velocidade no inimigo fazendo o movimentar
-        rb.linearVelocity = new Vector2(horizontalForce * currentSpeed, 0);
+        rb.linearVelocity = new Vector2(horizontalForce * currentSpeed, verticalForce * currentSpeed);
     }
 
     void UpdateAnimator()
