@@ -28,6 +28,18 @@ public class EnemyMeleeController : MonoBehaviour
     // Variavel que vamos usar para controlar o intervalo de tempo que o inimigo ficará andando vertical
     // Isso vai ajudar à dar uma aleatoriedade ao movimento do inimigo
     private float walkTimer;
+
+    // Variáveis para mecânica de ataque
+    private float attackRate = 1f;
+    private float nextAttack;
+
+    // Variaveis para mecânica de dano
+    public int maxHealth;
+    public int currentHealth;
+
+    public float staggerTime = 0.5f;
+    private float damageTimer;
+    public bool isTakingDamage;
     
     void Start()
     {
@@ -84,6 +96,22 @@ public class EnemyMeleeController : MonoBehaviour
             isWalking = true;
         }
 
+        // Gereciar o tempo de stagger
+        if (isTakingDamage && !isDead)
+        {
+            damageTimer += Time.deltaTime;
+
+            ZeroSpeed();
+
+            if (damageTimer >= staggerTime)
+            {
+                isTakingDamage = false;
+                damageTimer = 0;
+
+                ResetSpeed();
+            }
+        }
+
         // Atualiza o animator
         UpdateAnimator();
     }
@@ -117,10 +145,46 @@ public class EnemyMeleeController : MonoBehaviour
 
         // Aplica velocidade no inimigo fazendo o movimentar
         rb.linearVelocity = new Vector2(horizontalForce * currentSpeed, verticalForce * currentSpeed);
+
+        // ATAQUE
+        // Se estiver perto do Player e o timer do jogo for maior que o valor de nextAttack
+        if (Mathf.Abs(targetDistance.x) < 0.2f && Mathf.Abs(targetDistance.y) < 0.05f && Time.time > nextAttack)
+        {
+            // Executa animação de ataque
+            animator.SetTrigger("Attack");
+
+            ZeroSpeed();
+
+            // Pega o tempo atual e soma o attackRate, para definir a partir de quando o inimigo poderá atacar novamente
+            nextAttack = Time.time + attackRate;
+        }
     }
 
     void UpdateAnimator()
     {
         animator.SetBool("isWalking", isWalking);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (!isDead)
+        {
+            isTakingDamage = true;
+
+            currentHealth -= damage;
+
+            animator.SetTrigger("HitDamage");
+
+        }
+    }
+
+    void ZeroSpeed()
+    {
+        currentSpeed = 0;
+    }
+
+    void ResetSpeed()
+    {
+        currentSpeed = enemySpeed;
     }
 }
