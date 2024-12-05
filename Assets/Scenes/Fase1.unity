@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 116437971}
   - component: {fileID: 116437970}
   - component: {fileID: 116437972}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EnemyMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 1026164129}
   - component: {fileID: 1026164130}
   - component: {fileID: 1026164131}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -858,7 +858,7 @@ Transform:
   m_GameObject: {fileID: 1160571586}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9800053, y: -0.009950787, z: -9.95806}
+  m_LocalPosition: {x: 1.6619978, y: -0.009950787, z: -9.95806}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1078,7 +1078,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1437174457}
   - component: {fileID: 1437174458}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1295,7 +1295,7 @@ GameObject:
   - component: {fileID: 1778258551}
   - component: {fileID: 1778258552}
   - component: {fileID: 1778258553}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
