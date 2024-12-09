@@ -23,13 +23,15 @@ public class PlayerController : MonoBehaviour
 
     //Tempo de ataque 
     private float timeCross = 1.3f;
-
     private bool comboControl;
 
     // Indicar se o Player esta morto
     private bool isDead;
 
-
+    // Propriedades para a UI
+    public int maxHealth = 10;
+    public int currentHealth;
+    public Sprite playerImage;
     
     void Start()
     {
@@ -38,8 +40,10 @@ public class PlayerController : MonoBehaviour
 
         // Obtem e inicializa as propriedades do animator
         playerAnimator = GetComponent<Animator>();
-
         currentSpeed = playerSpeed;
+
+        // Iniciar a vida do Player
+        currentHealth = maxHealth;
     }
 
     private void Update()
@@ -161,5 +165,15 @@ public class PlayerController : MonoBehaviour
     void ResetSpeed()
     {
         currentSpeed = playerSpeed;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (!isDead)
+        {
+            currentHealth -= damage;
+            playerAnimator.SetTrigger("HitDamage");
+            FindFirstObjectByType<UIManager>().UpdatePlayerHealth(currentHealth);
+        }
     }
 }
