@@ -14,7 +14,21 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
-        
+        // Caso atinja o número máximo de inimigos spawnados
+        if (currentEnemies >= numberOfEnemies)
+        {
+            // Contar a quantidade de inimgos ativos na cena
+            int enemies = FindObjectsByType<EnemyMeleeController>(FindObjectsSortMode.None).Length;
+
+            if (enemies <= 0)
+            {
+                // Avança de seção
+                LevelManager.ChangeSection(nextSection);
+
+                // Desabilitar o spawner
+                this.gameObject.SetActive(false);
+            }
+        }
     }
 
     void SpawnEnemy()
