@@ -63,7 +63,8 @@ public class EnemyRanged : MonoBehaviour
             this.transform.Rotate(0, 180, 0);
             previousDirectionRight = true;
         }
-        else
+
+        if (!facingRight && previousDirectionRight)
         {
             this.transform.Rotate(0, -180, 0);
             previousDirectionRight = false;
@@ -177,6 +178,31 @@ public class EnemyRanged : MonoBehaviour
 
                 nextAttack = Time.time + attackRate;
             }
+        }
+    }
+
+    public void Shoot()
+    {
+        // Define a posição de spawn do projetil
+        Vector2 spawnPosition = new Vector2(this.transform.position.x, this.transform.position.y + 0.2f);
+
+        // Spawnar o projetil na posição definida
+        GameObject shotObject = Instantiate(projectile, spawnPosition, Quaternion.identity);
+
+        // Ativar o projetil
+        shotObject.SetActive(true);
+
+        var shotPhysics = shotObject.GetComponent<Rigidbody2D>();
+
+        if (facingRight)
+        {
+            // Aplica força no projétil para ele se deslocar para a direita
+            shotPhysics.AddForceX(80f);
+        }
+        else
+        {
+            // Aplica força no projétil para ele se deslocar para a esquerda
+            shotPhysics.AddForceX(-80f);
         }
     }
 }
